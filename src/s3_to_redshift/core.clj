@@ -153,6 +153,12 @@
 
           (log/infof "done with manifest %s, updating the status table" manifest-url)
 
+          ;; vacuum table after loading data
+          (k/exec-raw
+           (format "VACUUM %s"
+                   redshift-table))
+          (log/infof "done with vacuum of %s" redshift-table)
+
           (k/insert
            seen-table
            (k/values (->> (:entries manifest)
